@@ -1,59 +1,224 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Todo Management System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A comprehensive Laravel-based Todo Management System with user authentication, role-based access control, and complete CRUD operations for todos with image and file attachments.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### User Panel
+- ✅ User Registration & Login
+- ✅ Email Verification
+- ✅ Password Reset via Email
+- ✅ Profile Management with Image Upload
+- ✅ Todo CRUD Operations (Create, Read, Update, Delete)
+- ✅ Todo Status Management (Pending/Completed)
+- ✅ Image Upload for Todos
+- ✅ File Attachment Upload (PDF, DOCX, ZIP, etc.)
+- ✅ Dashboard with Statistics
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Admin Panel
+- ✅ Complete Admin Dashboard
+- ✅ User Management (View, Create, Activate/Deactivate, Delete)
+- ✅ Todo Oversight (View all user todos)
+- ✅ User Statistics and Analytics
+- ✅ Profile Management
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Security & Authentication
+- ✅ Laravel Breeze Authentication
+- ✅ Email Verification System
+- ✅ Password Reset Functionality
+- ✅ Role-Based Access Control (Admin/User)
+- ✅ Active/Inactive Account Management
+- ✅ CSRF Protection
+- ✅ File Upload Validation
+- ✅ Middleware-based Security
 
-## Learning Laravel
+### Technical Features
+- ✅ Laravel 12 Framework
+- ✅ MySQL Database
+- ✅ Eloquent ORM
+- ✅ Blade Templating Engine
+- ✅ Bootstrap 5 UI
+- ✅ File Storage System
+- ✅ Responsive Design
+- ✅ Clean Code Architecture
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Installation
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd todo-management-system
+   ```
 
-## Laravel Sponsors
+2. **Install PHP dependencies**
+   ```bash
+   composer install
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. **Install Node.js dependencies**
+   ```bash
+   npm install
+   ```
 
-### Premium Partners
+4. **Environment Configuration**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+   Configure your database and mail settings in `.env`:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=todo_management
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+
+   MAIL_MAILER=smtp
+   MAIL_HOST=your_smtp_host
+   MAIL_PORT=587
+   MAIL_USERNAME=your_email@domain.com
+   MAIL_PASSWORD=your_email_password
+   MAIL_ENCRYPTION=tls
+   ```
+
+5. **Database Setup**
+   ```bash
+   php artisan migrate:fresh --seed
+   ```
+
+6. **Storage Link**
+   ```bash
+   php artisan storage:link
+   ```
+
+7. **Build Assets** (Optional)
+   ```bash
+   npm run build
+   ```
+
+8. **Start the Server**
+   ```bash
+   php artisan serve
+   ```
+
+   Visit `http://127.0.0.1:8000` in your browser.
+
+## Default Admin Account
+
+After seeding the database, you can login with:
+- **Email:** `admin@example.com`
+- **Password:** `password`
+
+## Usage
+
+### For Users:
+1. Register a new account or login
+2. Verify your email address
+3. Access your dashboard to manage todos
+4. Create, edit, and delete your todos
+5. Upload images and attachments
+6. Update your profile
+
+### For Admins:
+1. Login with admin credentials
+2. Access admin dashboard for overview
+3. Manage all users (activate/deactivate accounts)
+4. View all todos across the system
+5. Monitor system statistics
+
+## Project Structure
+
+```
+├── app/
+│   ├── Http/Controllers/
+│   │   ├── Admin/          # Admin controllers
+│   │   ├── Auth/           # Authentication controllers
+│   │   ├── User/           # User controllers
+│   │   └── TodoController.php
+│   ├── Models/
+│   │   ├── User.php
+│   │   └── Todo.php
+│   ├── Policies/
+│   │   └── TodoPolicy.php
+│   └── Http/Middleware/    # Custom middleware
+├── database/
+│   ├── factories/          # Model factories
+│   ├── migrations/         # Database migrations
+│   └── seeders/            # Database seeders
+├── resources/views/
+│   ├── layouts/            # Blade layouts
+│   ├── admin/              # Admin views
+│   ├── auth/               # Authentication views
+│   ├── user/               # User views
+│   └── errors/             # Error pages
+├── routes/
+│   └── web.php             # Web routes
+├── storage/app/public/     # File uploads
+└── public/                 # Public assets
+```
+
+## Database Schema
+
+### Users Table
+- id, name, email, password
+- role (admin/user), profile_image
+- is_active, email_verified_at
+- timestamps
+
+### Todos Table
+- id, user_id, title, description
+- image, attachment, status (pending/completed)
+- timestamps
+
+## Security Features
+
+- **Authentication:** Laravel Breeze with custom enhancements
+- **Authorization:** Policies for todo management
+- **Middleware:** Custom middleware for admin access and active user checks
+- **File Validation:** Secure file upload with type and size validation
+- **CSRF Protection:** Built-in Laravel CSRF protection
+- **Password Hashing:** Bcrypt password hashing
+
+## API Endpoints
+
+### Public Routes
+- `GET /` - Redirect to login
+- `GET/POST /login` - User login
+- `GET/POST /register` - User registration
+- `GET/POST /forgot-password` - Password reset request
+- `GET/POST /reset-password` - Password reset
+
+### Authenticated Routes (Users)
+- `GET /user/dashboard` - User dashboard
+- `GET/POST /user/todos` - Todo management
+- `GET/POST /user/profile` - Profile management
+
+### Admin Routes
+- `GET /admin/dashboard` - Admin dashboard
+- `GET/POST /admin/users` - User management
+- `GET /admin/todos` - Todo oversight
+
+## Testing
+
+Run the test suite:
+```bash
+php artisan test
+```
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Run tests
+5. Submit a pull request
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the [MIT license](LICENSE).
+
+## Support
+
+For support, please contact the development team or create an issue in the repository.

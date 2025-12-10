@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Create Todo - TaskFlow</title>
+    <title>Edit Todo - TaskFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -33,8 +33,8 @@
         }
 
         .form-header {
-            background-color: #007bff;
-            color: white;
+            background-color: #ffc107;
+            color: #333;
             padding: 2rem;
             text-align: center;
         }
@@ -64,8 +64,8 @@
         }
 
         .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+            border-color: #ffc107;
+            box-shadow: 0 0 0 3px rgba(255, 193, 7, 0.25);
         }
 
         .file-upload-area {
@@ -79,14 +79,32 @@
         }
 
         .file-upload-area:hover {
-            border-color: #007bff;
-            background: #e9ecef;
+            border-color: #ffc107;
+            background: #fff3cd;
         }
 
         .file-upload-icon {
             font-size: 2.5rem;
             color: #9ca3af;
             margin-bottom: 1rem;
+        }
+
+        .current-file {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .current-file img {
+            max-width: 80px;
+            max-height: 80px;
+            border-radius: 6px;
+            object-fit: cover;
         }
 
         .btn-custom {
@@ -124,7 +142,7 @@
                         <a class="nav-link" href="{{ route('todos.index') }}">My Todos</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link active" href="{{ route('todos.create') }}">Create Todo</a>
+                        <a class="nav-link active" href="{{ route('todos.edit', $todo) }}">Edit Todo</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav">
@@ -154,8 +172,8 @@
         <div class="container">
             <div class="row justify-content-center">
                 <div class="col-md-8 text-center">
-                    <h1 class="mb-3">Create New Todo</h1>
-                    <p class="text-muted">Add a new task to your todo list</p>
+                    <h1 class="mb-3">Edit Todo</h1>
+                    <p class="text-muted">Update your task information</p>
                 </div>
             </div>
         </div>
@@ -168,10 +186,10 @@
                     <!-- Form Header -->
                     <div class="form-header">
                         <div class="form-header-icon">
-                            <i class="bi bi-plus-circle-fill"></i>
+                            <i class="bi bi-pencil-square"></i>
                         </div>
-                        <h3 class="mb-0">Add New Task</h3>
-                        <p class="mb-0 opacity-75">Fill in the details below</p>
+                        <h3 class="mb-0">Update Task</h3>
+                        <p class="mb-0 opacity-75">Modify task details and attachments</p>
                     </div>
 
                     <!-- Form Body -->
@@ -196,8 +214,9 @@
                             </div>
                         @endif
 
-                        <form method="POST" action="{{ route('todos.store') }}" enctype="multipart/form-data">
+                        <form method="POST" action="{{ route('todos.update', $todo) }}" enctype="multipart/form-data">
                             @csrf
+                            @method('PUT')
 
                             <div class="row">
                                 <div class="col-12">
@@ -206,7 +225,7 @@
                                             <i class="bi bi-tag me-2"></i>Task Title *
                                         </label>
                                         <input type="text" class="form-control @error('title') is-invalid @enderror"
-                                               id="title" name="title" value="{{ old('title') }}"
+                                               id="title" name="title" value="{{ old('title', $todo->title) }}"
                                                placeholder="Enter a clear, descriptive title for your task"
                                                required>
                                         @error('title')
@@ -225,7 +244,7 @@
                                         <textarea class="form-control @error('description') is-invalid @enderror"
                                                   id="description" name="description" rows="4"
                                                   placeholder="Provide detailed information about this task..."
-                                                  required>{{ old('description') }}</textarea>
+                                                  required>{{ old('description', $todo->description) }}</textarea>
                                         @error('description')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
@@ -239,11 +258,23 @@
                                         <label for="image" class="form-label">
                                             <i class="bi bi-image me-2"></i>Image (Optional)
                                         </label>
+
+                                        @if($todo->image)
+                                            <div class="current-file mb-3">
+                                                <img src="{{ $todo->getImageUrl() }}" alt="Current Image">
+                                                <div class="flex-grow-1">
+                                                    <strong>Current Image</strong>
+                                                    <br>
+                                                    <small class="text-muted">Will be replaced if you upload a new one</small>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                         <div class="file-upload-area" onclick="document.getElementById('image').click()">
                                             <div class="file-upload-icon">
                                                 <i class="bi bi-cloud-upload"></i>
                                             </div>
-                                            <p class="mb-1 fw-bold">Click to upload an image</p>
+                                            <p class="mb-1 fw-bold">Click to upload new image</p>
                                             <p class="text-muted small">JPEG, PNG, JPG, GIF up to 2MB</p>
                                             <input type="file" class="d-none @error('image') is-invalid @enderror"
                                                    id="image" name="image" accept="image/*">
@@ -259,11 +290,26 @@
                                         <label for="attachment" class="form-label">
                                             <i class="bi bi-paperclip me-2"></i>Attachment (Optional)
                                         </label>
+
+                                        @if($todo->attachment)
+                                            <div class="current-file mb-3">
+                                                <div class="bg-primary text-white rounded p-2">
+                                                    <i class="bi bi-file-earmark me-2"></i>
+                                                    <strong>{{ $todo->getAttachmentFilename() }}</strong>
+                                                </div>
+                                                <div class="flex-grow-1">
+                                                    <strong>Current File</strong>
+                                                    <br>
+                                                    <small class="text-muted">Will be replaced if you upload a new one</small>
+                                                </div>
+                                            </div>
+                                        @endif
+
                                         <div class="file-upload-area" onclick="document.getElementById('attachment').click()">
                                             <div class="file-upload-icon">
                                                 <i class="bi bi-file-earmark"></i>
                                             </div>
-                                            <p class="mb-1 fw-bold">Click to upload a file</p>
+                                            <p class="mb-1 fw-bold">Click to upload new file</p>
                                             <p class="text-muted small">PDF, DOC, ZIP, Images up to 5MB</p>
                                             <input type="file" class="d-none @error('attachment') is-invalid @enderror"
                                                    id="attachment" name="attachment"
@@ -279,11 +325,11 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="d-flex justify-content-between align-items-center">
-                                        <a href="{{ route('todos.index') }}" class="btn btn-cancel btn-custom">
+                                        <a href="{{ route('todos.show', $todo) }}" class="btn btn-cancel btn-custom">
                                             <i class="bi bi-arrow-left me-2"></i>Cancel
                                         </a>
-                                        <button type="submit" class="btn btn-primary btn-custom">
-                                            <i class="bi bi-check-circle me-2"></i>Create Todo
+                                        <button type="submit" class="btn btn-warning btn-custom">
+                                            <i class="bi bi-check-circle me-2"></i>Update Todo
                                         </button>
                                     </div>
                                 </div>
@@ -297,18 +343,6 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // File upload preview
-        document.getElementById('image').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    // You could add image preview here if desired
-                };
-                reader.readAsDataURL(file);
-            }
-        });
-
         // File upload area click handling
         document.querySelectorAll('.file-upload-area').forEach(area => {
             area.addEventListener('click', function() {
@@ -322,6 +356,35 @@
             area.querySelector('input[type="file"]').addEventListener('click', function(e) {
                 e.stopPropagation();
             });
+        });
+
+        // Update file upload area when file is selected
+        document.getElementById('image').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const area = this.closest('.file-upload-area');
+                area.innerHTML = `
+                    <div class="file-upload-icon text-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <p class="mb-1 fw-bold text-success">${file.name}</p>
+                    <p class="text-muted small">File selected successfully</p>
+                `;
+            }
+        });
+
+        document.getElementById('attachment').addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                const area = this.closest('.file-upload-area');
+                area.innerHTML = `
+                    <div class="file-upload-icon text-success">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+                    <p class="mb-1 fw-bold text-success">${file.name}</p>
+                    <p class="text-muted small">File selected successfully</p>
+                `;
+            }
         });
     </script>
 </body>

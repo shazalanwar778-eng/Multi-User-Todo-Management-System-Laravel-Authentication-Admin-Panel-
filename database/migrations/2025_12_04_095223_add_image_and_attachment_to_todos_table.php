@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('todos', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->string('title');
-            $table->text('description');
+        Schema::table('todos', function (Blueprint $table) {
             $table->string('image')->nullable();
             $table->string('attachment')->nullable();
-            $table->enum('status', ['pending', 'completed'])->default('pending');
-            $table->timestamps();
         });
     }
 
@@ -28,6 +22,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('todos');
+        Schema::table('todos', function (Blueprint $table) {
+            $table->dropColumn(['image', 'attachment']);
+        });
     }
 };
